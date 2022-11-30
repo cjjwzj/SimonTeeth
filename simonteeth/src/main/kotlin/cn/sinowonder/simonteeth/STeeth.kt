@@ -157,6 +157,8 @@ object STeeth : BluetoothGattCallback() {
 
     override fun onPhyRead(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
         super.onPhyRead(gatt, txPhy, rxPhy, status)
+
+
     }
 
     @SuppressLint("MissingPermission")
