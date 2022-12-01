@@ -31,7 +31,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
+    publishing {
+        singleVariant("release")
+    }
 
 }
 
@@ -46,18 +48,18 @@ dependencies {
 }
 
 
-task sourceJar(type: Jar) {
-    classifier "sources"
+task generateSourcesJar(type: Jar){
     from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
 }
-project.afterEvaluate {
+afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                from components.release
-                groupId = 'com.github.cjjwzj'
-                artifactId = 'SimonTeeth'
-                version = '1.0.0'
+                from components.release         // 表示发布 release（jitpack 都不会使用到）
+                groupId = 'cn.sinowonder.simonteeth' // 这个是依赖库的组 id
+                artifactId = 'SimonTeeth-Both'       // 依赖库的名称（jitpack 都不会使用到）
+                version ="1.0.0"                //当前版本依赖库版本号，这个jitpack不会使用到，只是我们开发者自己查看
             }
         }
     }
