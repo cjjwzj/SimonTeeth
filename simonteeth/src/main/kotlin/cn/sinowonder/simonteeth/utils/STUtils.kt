@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
-import cn.sinowonder.simonteeth.STeeth
+import cn.sinowonder.simonteeth.STeethCen
 
 /**
  * <br>
@@ -44,7 +44,7 @@ object STUtils {
      */
     @SuppressLint("MissingPermission")
     fun enableBlueToothSilently() {
-        STeeth.mBluetoothAdapter.enable()
+        STeethCen.mBluetoothAdapter.enable()
     }
 
 
@@ -54,7 +54,7 @@ object STUtils {
      */
     @SuppressLint("MissingPermission")
     fun closeBlueTooth() {
-        STeeth.mBluetoothAdapter.disable()
+        STeethCen.mBluetoothAdapter.disable()
 
     }
 
@@ -101,7 +101,7 @@ object STUtils {
     fun isScanning(): Boolean {
 
 
-        return STeeth.mBluetoothAdapter.isDiscovering
+        return STeethCen.mBluetoothAdapter.isDiscovering
     }
 
     /**

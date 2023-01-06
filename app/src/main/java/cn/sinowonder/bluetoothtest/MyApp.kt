@@ -3,7 +3,8 @@ package cn.sinowonder.bluetoothtest
 import android.app.Application
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import cn.sinowonder.simonteeth.STeeth
+import cn.sinowonder.simonteeth.STeethCen
+import cn.sinowonder.simonteeth.SimonCore
 
 /**
  * <br>
@@ -19,7 +20,7 @@ class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        STeeth.init(bluetoothManager)
+        SimonCore.init(bluetoothManager)
 
 
     }

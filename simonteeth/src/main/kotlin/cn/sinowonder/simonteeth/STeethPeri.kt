@@ -44,7 +44,7 @@ object STeethPeri {
             .setIncludeDeviceName(true)
             .build()
     ) {
-        val bleAdertiser = STeeth.mBluetoothAdapter.bluetoothLeAdvertiser
+        val bleAdertiser = STeethCen.mBluetoothAdapter.bluetoothLeAdvertiser
         initServer(context)
         if (establishCustomeService != null) {
             establishCustomeService(mBleGattServer)
@@ -57,7 +57,7 @@ object STeethPeri {
     fun initServer(context: Context) {
 
         mBleGattServer =
-            STeeth.mBluetoothManager.openGattServer(context, mBluetoothGattServerCallback)
+            STeethCen.mBluetoothManager.openGattServer(context, mBluetoothGattServerCallback)
 
     }
 
