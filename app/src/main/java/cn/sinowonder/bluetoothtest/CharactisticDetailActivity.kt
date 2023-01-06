@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import cn.sinowonder.simonteeth.STeeth
+import cn.sinowonder.simonteeth.STeethCen
 import cn.sinowonder.simonteeth.interfaces.central.CharacteristicListener
 
 /**
@@ -40,10 +40,10 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         tvUUID.text = selectedCharacteristicUUID?.toString()
         btnSend.setOnClickListener(this)
         tvReceive.movementMethod = ScrollingMovementMethod()
-        bleChar = STeeth.getLastConnectedGatt().getService(selectedServiceUUID)
+        bleChar = STeethCen.getLastConnectedGatt().getService(selectedServiceUUID)
             .getCharacteristic(selectedCharacteristicUUID)
-        STeeth.getLastConnectedGatt().setCharacteristicNotification(bleChar, true)
-        STeeth.addCharacteristicListener(99, this)
+        STeethCen.getLastConnectedGatt().setCharacteristicNotification(bleChar, true)
+        STeethCen.addCharacteristicListener(99, this)
 
     }
 
@@ -53,7 +53,7 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         when (v?.id) {
             R.id.btn_send -> {
                 bleChar.value = edtSend.text.toString().toByteArray()
-                STeeth.getLastConnectedGatt().writeCharacteristic(bleChar)
+                STeethCen.getLastConnectedGatt().writeCharacteristic(bleChar)
             }
 
 

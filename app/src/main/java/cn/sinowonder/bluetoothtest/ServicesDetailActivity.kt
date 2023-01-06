@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
-import cn.sinowonder.simonteeth.STeeth
+import cn.sinowonder.simonteeth.STeethCen
 import com.blankj.utilcode.util.ActivityUtils
 
 /**
@@ -35,7 +35,7 @@ class ServicesDetailActivity : AppCompatActivity(),
         title = "服务详情"
         rvService.adapter = bleCharacteristicAdapter
         rvService.addItemDecoration(DividerItemDecoration(this, VERTICAL))
-        val currentService = STeeth.getLastConnectedGatt().getService(selectedServiceUUID)
+        val currentService = STeethCen.getLastConnectedGatt().getService(selectedServiceUUID)
         currentService?.characteristics?.let { datas.addAll(it) }
         bleCharacteristicAdapter.notifyDataSetChanged()
 

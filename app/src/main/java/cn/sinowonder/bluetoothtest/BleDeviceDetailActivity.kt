@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
-import cn.sinowonder.simonteeth.STeeth
+import cn.sinowonder.simonteeth.STeethCen
 import cn.sinowonder.simonteeth.interfaces.central.ConnectListener
 import cn.sinowonder.simonteeth.interfaces.central.RssiListener
 import cn.sinowonder.simonteeth.utils.STUtils
@@ -68,14 +68,14 @@ class BleDeviceDetailActivity : AppCompatActivity(), View.OnClickListener,
         btnReadRssi.setOnClickListener(this)
         btnChangeMtu.setOnClickListener(this)
 
-        bleDevice = bleResult?.device?.address?.let { STeeth.getRemoteDevice(it) }!!
+        bleDevice = bleResult?.device?.address?.let { STeethCen.getRemoteDevice(it) }!!
         tvDeviceName.text = bleDevice.name
         tvMac.text = bleDevice.address
         tvRssi.text = bleResult?.rssi.toString()
         tvState.text = "未连接"
         tvState.setTextColor(Color.RED)
-        STeeth.setConnectListener(this)
-        STeeth.setRssiListener(this)
+        STeethCen.setConnectListener(this)
+        STeethCen.setRssiListener(this)
 
     }
 
@@ -83,7 +83,7 @@ class BleDeviceDetailActivity : AppCompatActivity(), View.OnClickListener,
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_connect -> {
-                bleGatt = STeeth.connect(this, false, bleDevice)
+                bleGatt = STeethCen.connect(this, false, bleDevice)
             }
             R.id.btn_disconnect -> {
                 bleGatt.disconnect()
@@ -100,7 +100,7 @@ class BleDeviceDetailActivity : AppCompatActivity(), View.OnClickListener,
             }
             R.id.btn_change_mtu -> {
 
-                STeeth.getLastConnectedGatt().requestMtu(512)
+                STeethCen.getLastConnectedGatt().requestMtu(512)
 
             }
         }

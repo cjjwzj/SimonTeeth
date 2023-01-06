@@ -3,7 +3,6 @@ package cn.sinowonder.bluetoothtest
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import cn.sinowonder.simonteeth.STeeth
 import cn.sinowonder.simonteeth.utils.STUtils
 import com.blankj.utilcode.util.ActivityUtils
 
@@ -22,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     val btnOpenBleT by lazy { findViewById<Button>(R.id.btn_open_ble_t) }
     val btnPerfPeri by lazy { findViewById<Button>(R.id.btn_perf_peri) }
     val btnPerfCent by lazy { findViewById<Button>(R.id.btn_perf_central) }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

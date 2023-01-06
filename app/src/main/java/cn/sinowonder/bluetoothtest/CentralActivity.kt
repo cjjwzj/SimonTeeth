@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import cn.sinowonder.bluetoothtest.BleDeviceDetailActivity.Companion.BLE_RESULT
-import cn.sinowonder.simonteeth.STeeth
+import cn.sinowonder.simonteeth.STeethCen
 import com.blankj.utilcode.util.ActivityUtils
 
 
@@ -25,7 +25,6 @@ class CentralActivity : AppCompatActivity(), BleDeviceAdapter.OnItemClickListene
     val realAdapter = BleDeviceAdapter(scanBleResults, this)
 
 
-
     @SuppressLint("MissingPermission", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +34,7 @@ class CentralActivity : AppCompatActivity(), BleDeviceAdapter.OnItemClickListene
         btnStartScan.setOnClickListener {
             scanBleResults.clear()
             realAdapter.notifyDataSetChanged()
-            STeeth.startLeScan(object : ScanCallback() {
+            STeethCen.startLeScan(object : ScanCallback() {
                 override fun onScanResult(callbackType: Int, result: ScanResult) {
                     super.onScanResult(callbackType, result)
                     if (scanBleResults.none { it.device.address == result.device.address }) {
@@ -67,14 +66,17 @@ class CentralActivity : AppCompatActivity(), BleDeviceAdapter.OnItemClickListene
     }
 
     @SuppressLint("MissingPermission")
-    override fun onContentClicked(position: Int, content: View, holder: BleDeviceAdapter.BleViewHolder) {
+    override fun onContentClicked(
+        position: Int,
+        content: View,
+        holder: BleDeviceAdapter.BleViewHolder
+    ) {
 
         val bleIntent = Intent(this, BleDeviceDetailActivity::class.java).putExtra(
             BLE_RESULT,
             scanBleResults[position]
         )
         ActivityUtils.startActivity(bleIntent)
-
 
 
     }
