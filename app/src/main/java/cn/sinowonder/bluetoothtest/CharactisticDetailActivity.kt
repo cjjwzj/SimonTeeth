@@ -1,16 +1,19 @@
 package cn.sinowonder.bluetoothtest
 
+import ClientCharacteristicConfiguration
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import cn.sinowonder.simonteeth.STeethCen
 import cn.sinowonder.simonteeth.interfaces.central.CharacteristicListener
+import java.util.*
 
 /**
  * <br>
@@ -26,8 +29,13 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
 
     val tvUUID: TextView by lazy { findViewById(R.id.tv_charactistic_uuid) }
     val edtSend: EditText by lazy { findViewById(R.id.edt_send) }
-    val btnSend: TextView by lazy { findViewById(R.id.btn_send) }
-    val tvReceive: TextView by lazy { findViewById(R.id.tv_receive) }
+    val btnSend: Button by lazy { findViewById(R.id.btn_send) }
+    val btnRead: Button by lazy { findViewById(R.id.btn_read) }
+    val btnSubscribe: Button by lazy { findViewById(R.id.btn_subscribe) }
+    val btnUnSubscribe: Button by lazy { findViewById(R.id.btn_unsubscribe) }
+    val tvNotifyReceive: TextView by lazy { findViewById(R.id.tv_notify_receive) }
+    val tvWriteReply: TextView by lazy { findViewById(R.id.tv_write_reply) }
+    val tvReadReceive: TextView by lazy { findViewById(R.id.tv_read_receive) }
 
     lateinit var bleChar: BluetoothGattCharacteristic
 
@@ -39,12 +47,16 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         title = "特征详情"
         tvUUID.text = selectedCharacteristicUUID?.toString()
         btnSend.setOnClickListener(this)
-        tvReceive.movementMethod = ScrollingMovementMethod()
+        btnRead.setOnClickListener(this)
+        btnSubscribe.setOnClickListener(this)
+        btnUnSubscribe.setOnClickListener(this)
+        tvNotifyReceive.movementMethod = ScrollingMovementMethod()
+        tvReadReceive.movementMethod = ScrollingMovementMethod()
+        tvWriteReply.movementMethod = ScrollingMovementMethod()
         bleChar = STeethCen.getLastConnectedGatt().getService(selectedServiceUUID)
             .getCharacteristic(selectedCharacteristicUUID)
         STeethCen.getLastConnectedGatt().setCharacteristicNotification(bleChar, true)
         STeethCen.addCharacteristicListener(99, this)
-
     }
 
 
@@ -54,6 +66,19 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
             R.id.btn_send -> {
                 bleChar.value = edtSend.text.toString().toByteArray()
                 STeethCen.getLastConnectedGatt().writeCharacteristic(bleChar)
+            }
+            R.id.btn_read -> {
+                STeethCen.getLastConnectedGatt().readCharacteristic(bleChar)
+            }
+
+            R.id.btn_subscribe -> {
+                STeethCen.subscribeNotify(
+                    bleChar,
+                    UUID.fromString(ClientCharacteristicConfiguration)
+                )
+            }
+            R.id.btn_unsubscribe -> {
+                STeethCen.unsubscribeNotify(bleChar,UUID.fromString(ClientCharacteristicConfiguration))
             }
 
 
@@ -68,6 +93,10 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         status: Int
     ) {
 
+        val a = characteristic?.value
+
+//        LogUtils.a(ArrayUtils.toString(a))
+        tvReadReceive.text = "${characteristic?.getStringValue(0)}\n${tvReadReceive.text}"
     }
 
     override fun onCharacteristicWrite(
@@ -77,7 +106,7 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         status: Int
     ) {
 
-
+        tvWriteReply.text = "${characteristic?.getStringValue(0)}\n${tvWriteReply.text}"
     }
 
 
@@ -86,6 +115,6 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         gatt: BluetoothGatt?,
         characteristic: BluetoothGattCharacteristic?
     ) {
-        tvReceive.text = "${characteristic?.getStringValue(0)}\n${tvReceive.text}"
+        tvNotifyReceive.text = "${characteristic?.getStringValue(0)}\n${tvNotifyReceive.text}"
     }
 }

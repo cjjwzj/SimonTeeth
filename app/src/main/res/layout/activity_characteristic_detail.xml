@@ -32,9 +32,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
+        android:gravity="center"
         android:hint="请输入"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:text='HD+RPC=3,{"paramtype":1}'
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -43,19 +45,94 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="发送"
-        app:layout_constraintBottom_toBottomOf="@+id/edt_send"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/edt_send"
         app:layout_constraintTop_toTopOf="@+id/edt_send" />
 
     <TextView
-        android:id="@+id/tv_receive"
+        android:id="@+id/tv_notify_receive"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:hint="订阅通知"
+        app:layout_constraintEnd_toEndOf="@+id/edt_send"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <Button
+        android:id="@+id/btn_read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="读取"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="@+id/btn_send"
+        app:layout_constraintStart_toStartOf="@+id/btn_send"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <TextView
+        android:id="@+id/tv_read_receive"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:hint="读取内容"
+        app:layout_constraintEnd_toEndOf="@+id/tv_write_reply"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <TextView
+        android:id="@+id/tv_write_reply"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:hint="发送回复"
         app:layout_constraintEnd_toEndOf="@+id/edt_send"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edt_send" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_write_reply" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_read_receive" />
+
+    <Button
+        android:id="@+id/btn_subscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="订阅"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_notify_receive"
+        app:layout_constraintEnd_toEndOf="@+id/btn_read"
+        app:layout_constraintStart_toStartOf="@+id/btn_read"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <Button
+        android:id="@+id/btn_unsubscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消订阅"
+        app:layout_constraintEnd_toEndOf="@+id/btn_subscribe"
+        app:layout_constraintStart_toStartOf="@+id/btn_subscribe"
+        app:layout_constraintTop_toBottomOf="@+id/btn_subscribe" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,8 +3,8 @@ package cn.sinowonder.bluetoothtest
 import android.app.Application
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import cn.sinowonder.simonteeth.STeethCen
 import cn.sinowonder.simonteeth.SimonCore
+import com.kongzue.dialogx.DialogX
 
 /**
  * <br>
@@ -19,6 +19,10 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        //初始化
+        DialogX.init(this)
+        DialogX.globalHoverWindow = true
+        DialogX.implIMPLMode = DialogX.IMPL_MODE.WINDOW
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         SimonCore.init(bluetoothManager)
 

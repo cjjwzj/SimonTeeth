@@ -44,4 +44,14 @@
         app:layout_constraintEnd_toEndOf="@+id/btn_perf_peri"
         app:layout_constraintStart_toStartOf="@+id/btn_perf_peri"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_open_notify_dialog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="开启监听弹窗"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_open_ble_t"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

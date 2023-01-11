@@ -28,7 +28,7 @@ class PeripheralActivity : AppCompatActivity(), ServerCharacteristicListener,
     val tvConState: TextView by lazy { findViewById(R.id.tv_con_state) }
     val edtSendContent: TextView by lazy { findViewById(R.id.edt_send_content) }
     val btnSend: TextView by lazy { findViewById(R.id.btn_send) }
-    val tvReceive: TextView by lazy { findViewById(R.id.tv_receive) }
+    val tvReceive: TextView by lazy { findViewById(R.id.tv_notify_receive) }
 
     lateinit var mWriteCharacteristic: BluetoothGattCharacteristic
     lateinit var mBleClientDevice: BluetoothDevice

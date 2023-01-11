@@ -1,10 +1,15 @@
 package cn.sinowonder.bluetoothtest
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import cn.sinowonder.simonteeth.utils.STUtils
 import com.blankj.utilcode.util.ActivityUtils
+import com.kongzue.dialogx.DialogX
+import com.kongzue.dialogx.dialogs.PopNotification
+import com.kongzue.dialogx.interfaces.OnDialogButtonClickListener
+
 
 /**
  * <br>
@@ -19,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     val btnOpenBleS by lazy { findViewById<Button>(R.id.btn_open_ble_s) }
     val btnOpenBleT by lazy { findViewById<Button>(R.id.btn_open_ble_t) }
+    val btnOpenNotify by lazy { findViewById<Button>(R.id.btn_open_notify_dialog) }
     val btnPerfPeri by lazy { findViewById<Button>(R.id.btn_perf_peri) }
     val btnPerfCent by lazy { findViewById<Button>(R.id.btn_perf_central) }
 
@@ -29,6 +35,14 @@ class MainActivity : AppCompatActivity() {
 
         btnOpenBleS.setOnClickListener {
             STUtils.enableBlueToothSilently()
+
+        }
+        btnOpenNotify.setOnClickListener {
+            PopNotification.build()
+                .setDialogImplMode(DialogX.IMPL_MODE.WINDOW)
+                .setTitle("这是一条消息 ")
+                .setMessage("ssss")
+                .show().noAutoDismiss()
 
         }
         btnOpenBleT.setOnClickListener {
