@@ -14,22 +14,14 @@ import android.bluetooth.BluetoothGattCharacteristic
  */
 interface CharacteristicListener {
 
-    fun onCharacteristicRead(
-        listenerTag: Int, gatt: BluetoothGatt?,
+    fun onCharacteristicRead(gatt: BluetoothGatt?,
         characteristic: BluetoothGattCharacteristic?,
         status: Int
     )
 
-    fun onCharacteristicWrite(
-        listenerTag: Int, gatt: BluetoothGatt?,
+    fun onCharacteristicWrite(gatt: BluetoothGatt?,
         characteristic: BluetoothGattCharacteristic?,
         status: Int
     )
-
-    fun onCharacteristicChange(
-        listenerTag: Int, gatt: BluetoothGatt?,
-        characteristic: BluetoothGattCharacteristic?
-    )
-
 
 }

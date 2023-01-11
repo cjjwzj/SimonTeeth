@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import cn.sinowonder.simonteeth.STeethCen
 import cn.sinowonder.simonteeth.interfaces.central.CharacteristicListener
+import cn.sinowonder.simonteeth.interfaces.central.NotifyListener
 import java.util.*
 
 /**
@@ -25,7 +26,7 @@ import java.util.*
  * @desc:cn.sinowonder.bluetoothtest
  */
 class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
-    CharacteristicListener {
+    CharacteristicListener, NotifyListener {
 
     val tvUUID: TextView by lazy { findViewById(R.id.tv_charactistic_uuid) }
     val edtSend: EditText by lazy { findViewById(R.id.edt_send) }
@@ -57,6 +58,7 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
             .getCharacteristic(selectedCharacteristicUUID)
         STeethCen.getLastConnectedGatt().setCharacteristicNotification(bleChar, true)
         STeethCen.addCharacteristicListener(99, this)
+        STeethCen.setNotifyListener(this)
     }
 
 
@@ -86,6 +88,15 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
 
     }
 
+    override fun onCharacteristicChange(
+        listenerTag: Int,
+        gatt: BluetoothGatt?,
+        characteristic: BluetoothGattCharacteristic?
+    ) {
+
+
+    }
+
     override fun onCharacteristicRead(
         listenerTag: Int,
         gatt: BluetoothGatt?,
@@ -111,10 +122,11 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
 
 
     override fun onCharacteristicChange(
-        listenerTag: Int,
         gatt: BluetoothGatt?,
         characteristic: BluetoothGattCharacteristic?
     ) {
         tvNotifyReceive.text = "${characteristic?.getStringValue(0)}\n${tvNotifyReceive.text}"
     }
+
+
 }

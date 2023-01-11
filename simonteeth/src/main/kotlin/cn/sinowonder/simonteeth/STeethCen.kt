@@ -7,7 +7,6 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
 import android.content.Context
-import android.util.ArrayMap
 import androidx.annotation.RequiresPermission
 import cn.sinowonder.simonteeth.entity.STeethDevice
 import cn.sinowonder.simonteeth.interfaces.central.*
@@ -36,12 +35,11 @@ object STeethCen : BluetoothGattCallback() {
     val mConnectedBleDeviceList = arrayListOf<STeethDevice>()
 
 
-    //回调监听器
-    val mCharacteristicListenerMap = ArrayMap<Int, CharacteristicListener>()
     lateinit var mConnectListener: ConnectListener
     lateinit var mMtuListener: MtuListener
     lateinit var mRssiListener: RssiListener
     lateinit var mNotifyListener: NotifyListener
+    lateinit var mCharacteristicListener: CharacteristicListener
 
 
     val stopExecutors = Executors.newSingleThreadScheduledExecutor()
@@ -52,17 +50,12 @@ object STeethCen : BluetoothGattCallback() {
     fun getLastConnectedGatt() = mCurrentBleGatt
 
 
-    fun addCharacteristicListener(
-        listenerTag: Int,
+    fun setCharacteristicListener(
         characteristicListener: CharacteristicListener
     ) {
-        this.mCharacteristicListenerMap[listenerTag] = characteristicListener
+        this.mCharacteristicListener = characteristicListener
     }
 
-    fun removeCharacteristicListener(listenerTag: Int) {
-        this.mCharacteristicListenerMap.remove(listenerTag)
-
-    }
 
     fun setNotifyListener(
         notifyListener: NotifyListener
@@ -144,7 +137,7 @@ object STeethCen : BluetoothGattCallback() {
     }
 
     @SuppressLint("MissingPermission")
-    fun subscribeNotify(characteristic: BluetoothGattCharacteristic,descriptorUUID: UUID) {
+    fun subscribeNotify(characteristic: BluetoothGattCharacteristic, descriptorUUID: UUID) {
         mCurrentBleGatt.setCharacteristicNotification(characteristic, true)
         val clientConfig = characteristic.getDescriptor(descriptorUUID);
         clientConfig.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE;
@@ -153,7 +146,7 @@ object STeethCen : BluetoothGattCallback() {
     }
 
     @SuppressLint("MissingPermission")
-    fun unsubscribeNotify(characteristic: BluetoothGattCharacteristic,descriptorUUID: UUID) {
+    fun unsubscribeNotify(characteristic: BluetoothGattCharacteristic, descriptorUUID: UUID) {
         mCurrentBleGatt.setCharacteristicNotification(characteristic, false)
         val clientConfig = characteristic.getDescriptor(descriptorUUID);
         clientConfig.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
@@ -213,9 +206,7 @@ object STeethCen : BluetoothGattCallback() {
         characteristic: BluetoothGattCharacteristic?,
         status: Int
     ) {
-        this.mCharacteristicListenerMap.forEach { (tag, listener) ->
-            listener.onCharacteristicRead(tag, gatt, characteristic, status)
-        }
+        mCharacteristicListener.onCharacteristicRead(gatt, characteristic, status)
     }
 
     override fun onCharacteristicWrite(
@@ -224,9 +215,7 @@ object STeethCen : BluetoothGattCallback() {
         status: Int
     ) {
 
-        this.mCharacteristicListenerMap.forEach { (tag, listener) ->
-            listener.onCharacteristicWrite(tag, gatt, characteristic, status)
-        }
+        mCharacteristicListener.onCharacteristicWrite(gatt, characteristic, status)
 
     }
 
@@ -235,7 +224,7 @@ object STeethCen : BluetoothGattCallback() {
         characteristic: BluetoothGattCharacteristic?
     ) {
 
-        this.mNotifyListener.onCharacteristicChange(gatt,characteristic)
+        this.mNotifyListener.onCharacteristicChange(gatt, characteristic)
     }
 
     override fun onDescriptorRead(
