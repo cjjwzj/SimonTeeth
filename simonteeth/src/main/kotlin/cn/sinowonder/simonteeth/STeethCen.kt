@@ -130,7 +130,7 @@ object STeethCen : BluetoothGattCallback() {
         bluetoothDevice: BluetoothDevice
     ): BluetoothGatt {
 
-        mCurrentBleGatt = bluetoothDevice.connectGatt(context, isAutoConnect, this)
+        bluetoothDevice.connectGatt(context, isAutoConnect, this)
 
         return mCurrentBleGatt
 
@@ -167,6 +167,7 @@ object STeethCen : BluetoothGattCallback() {
             BluetoothProfile.STATE_CONNECTED -> {
                 gatt?.device?.let { STeethDevice(it) }?.let { mConnectedBleDeviceList.add(it) }
                 mConnectedBleDeviceList.last().gatt = gatt
+                gatt?.let { mCurrentBleGatt = gatt }
                 mConnectListener.onConnectSuccess()
                 gatt?.discoverServices()
 

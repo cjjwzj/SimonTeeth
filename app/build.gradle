@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.cjjwzj:SimonTeeth:v1.0.3'
+    implementation 'com.github.cjjwzj:SimonTeeth:v1.0.4'
 //    implementation project(':simonteeth')
     implementation "com.kongzue.dialogx:DialogX:0.0.47"
     implementation 'com.blankj:utilcodex:1.31.1'

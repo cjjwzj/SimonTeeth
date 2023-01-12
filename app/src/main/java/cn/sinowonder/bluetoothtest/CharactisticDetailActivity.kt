@@ -57,7 +57,7 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         bleChar = STeethCen.getLastConnectedGatt().getService(selectedServiceUUID)
             .getCharacteristic(selectedCharacteristicUUID)
         STeethCen.getLastConnectedGatt().setCharacteristicNotification(bleChar, true)
-        STeethCen.addCharacteristicListener(99, this)
+        STeethCen.setCharacteristicListener(this)
         STeethCen.setNotifyListener(this)
     }
 
@@ -80,7 +80,10 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
                 )
             }
             R.id.btn_unsubscribe -> {
-                STeethCen.unsubscribeNotify(bleChar,UUID.fromString(ClientCharacteristicConfiguration))
+                STeethCen.unsubscribeNotify(
+                    bleChar,
+                    UUID.fromString(ClientCharacteristicConfiguration)
+                )
             }
 
 
@@ -88,17 +91,8 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
 
     }
 
-    override fun onCharacteristicChange(
-        listenerTag: Int,
-        gatt: BluetoothGatt?,
-        characteristic: BluetoothGattCharacteristic?
-    ) {
-
-
-    }
 
     override fun onCharacteristicRead(
-        listenerTag: Int,
         gatt: BluetoothGatt?,
         characteristic: BluetoothGattCharacteristic?,
         status: Int
@@ -111,7 +105,6 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onCharacteristicWrite(
-        listenerTag: Int,
         gatt: BluetoothGatt?,
         characteristic: BluetoothGattCharacteristic?,
         status: Int
