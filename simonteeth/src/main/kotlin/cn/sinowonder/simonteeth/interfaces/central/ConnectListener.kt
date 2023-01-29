@@ -14,7 +14,7 @@ import android.bluetooth.BluetoothGattService
  */
 interface ConnectListener {
 
-    fun onConnectSuccess()
+    fun onConnectSuccess(gatt: BluetoothGatt)
     fun onDisconnect()
     fun onServicesDiscovered(services: MutableList<BluetoothGattService>)
     fun onServicesDiscoverFailed(status: Int)

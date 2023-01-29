@@ -28,8 +28,6 @@ import java.util.concurrent.TimeUnit
 object STeethCen : BluetoothGattCallback() {
 
 
-    private lateinit var mCurrentBleDevice: BluetoothDevice
-    private lateinit var mCurrentBleGatt: BluetoothGatt
 
 
     val mConnectedBleDeviceList = arrayListOf<STeethDevice>()
@@ -44,10 +42,6 @@ object STeethCen : BluetoothGattCallback() {
 
     val stopExecutors = Executors.newSingleThreadScheduledExecutor()
 
-
-    fun getLastConnectedDevice() = mCurrentBleDevice
-
-    fun getLastConnectedGatt() = mCurrentBleGatt
 
 
     fun setCharacteristicListener(
@@ -112,8 +106,8 @@ object STeethCen : BluetoothGattCallback() {
      * @return 通过MAC获取到的外围设备
      */
     fun getRemoteDevice(address: String): BluetoothDevice {
-        mCurrentBleDevice = SimonCore.mBluetoothAdapter.getRemoteDevice(address)
-        return mCurrentBleDevice
+        return  SimonCore.mBluetoothAdapter.getRemoteDevice(address)
+
     }
 
     @SuppressLint("MissingPermission")
@@ -128,29 +122,28 @@ object STeethCen : BluetoothGattCallback() {
         context: Context,
         isAutoConnect: Boolean,
         bluetoothDevice: BluetoothDevice
-    ): BluetoothGatt {
+    ) {
 
         bluetoothDevice.connectGatt(context, isAutoConnect, this)
 
-        return mCurrentBleGatt
 
     }
 
     @SuppressLint("MissingPermission")
-    fun subscribeNotify(characteristic: BluetoothGattCharacteristic, descriptorUUID: UUID) {
-        mCurrentBleGatt.setCharacteristicNotification(characteristic, true)
+    fun subscribeNotify(bleGatt: BluetoothGatt,characteristic: BluetoothGattCharacteristic, descriptorUUID: UUID) {
+        bleGatt.setCharacteristicNotification(characteristic, true)
         val clientConfig = characteristic.getDescriptor(descriptorUUID);
         clientConfig.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE;
-        mCurrentBleGatt.writeDescriptor(clientConfig);
+        bleGatt.writeDescriptor(clientConfig);
 
     }
 
     @SuppressLint("MissingPermission")
-    fun unsubscribeNotify(characteristic: BluetoothGattCharacteristic, descriptorUUID: UUID) {
-        mCurrentBleGatt.setCharacteristicNotification(characteristic, false)
+    fun unsubscribeNotify(bleGatt: BluetoothGatt,characteristic: BluetoothGattCharacteristic, descriptorUUID: UUID) {
+        bleGatt.setCharacteristicNotification(characteristic, false)
         val clientConfig = characteristic.getDescriptor(descriptorUUID);
         clientConfig.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
-        mCurrentBleGatt.writeDescriptor(clientConfig)
+        bleGatt.writeDescriptor(clientConfig)
 
     }
 
@@ -167,8 +160,7 @@ object STeethCen : BluetoothGattCallback() {
             BluetoothProfile.STATE_CONNECTED -> {
                 gatt?.device?.let { STeethDevice(it) }?.let { mConnectedBleDeviceList.add(it) }
                 mConnectedBleDeviceList.last().gatt = gatt
-                gatt?.let { mCurrentBleGatt = gatt }
-                mConnectListener.onConnectSuccess()
+                gatt?.let { mConnectListener.onConnectSuccess(it) }
                 gatt?.discoverServices()
 
             }

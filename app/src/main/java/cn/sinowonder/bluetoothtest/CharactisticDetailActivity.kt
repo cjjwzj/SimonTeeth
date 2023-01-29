@@ -54,9 +54,9 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         tvNotifyReceive.movementMethod = ScrollingMovementMethod()
         tvReadReceive.movementMethod = ScrollingMovementMethod()
         tvWriteReply.movementMethod = ScrollingMovementMethod()
-        bleChar = STeethCen.getLastConnectedGatt().getService(selectedServiceUUID)
+        bleChar = BleDeviceDetailActivity.bleGatt.getService(selectedServiceUUID)
             .getCharacteristic(selectedCharacteristicUUID)
-        STeethCen.getLastConnectedGatt().setCharacteristicNotification(bleChar, true)
+        BleDeviceDetailActivity.bleGatt.setCharacteristicNotification(bleChar, true)
         STeethCen.setCharacteristicListener(this)
         STeethCen.setNotifyListener(this)
     }
@@ -67,20 +67,22 @@ class CharactisticDetailActivity : AppCompatActivity(), View.OnClickListener,
         when (v?.id) {
             R.id.btn_send -> {
                 bleChar.value = edtSend.text.toString().toByteArray()
-                STeethCen.getLastConnectedGatt().writeCharacteristic(bleChar)
+                BleDeviceDetailActivity.bleGatt.writeCharacteristic(bleChar)
             }
             R.id.btn_read -> {
-                STeethCen.getLastConnectedGatt().readCharacteristic(bleChar)
+                BleDeviceDetailActivity.bleGatt.readCharacteristic(bleChar)
             }
 
             R.id.btn_subscribe -> {
                 STeethCen.subscribeNotify(
+                    BleDeviceDetailActivity.bleGatt,
                     bleChar,
                     UUID.fromString(ClientCharacteristicConfiguration)
                 )
             }
             R.id.btn_unsubscribe -> {
                 STeethCen.unsubscribeNotify(
+                    BleDeviceDetailActivity.bleGatt,
                     bleChar,
                     UUID.fromString(ClientCharacteristicConfiguration)
                 )

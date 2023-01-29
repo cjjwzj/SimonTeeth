@@ -20,7 +20,6 @@ import cn.sinowonder.simonteeth.interfaces.central.RssiListener
 import cn.sinowonder.simonteeth.utils.STUtils
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
-import java.util.*
 
 /**
  * <br>
@@ -36,7 +35,7 @@ class BleDeviceDetailActivity : AppCompatActivity(), View.OnClickListener,
 
     companion object {
         const val BLE_RESULT = "BLE_RESULT"
-
+        lateinit var bleGatt: BluetoothGatt
 
     }
 
@@ -53,7 +52,7 @@ class BleDeviceDetailActivity : AppCompatActivity(), View.OnClickListener,
     val datas = arrayListOf<BluetoothGattService>()
     val serviceAdapter = BleServiceAdapter(datas, this)
     lateinit var bleDevice: BluetoothDevice
-    lateinit var bleGatt: BluetoothGatt
+
 
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +83,7 @@ class BleDeviceDetailActivity : AppCompatActivity(), View.OnClickListener,
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_connect -> {
-                bleGatt = STeethCen.connect(this, false, bleDevice)
+                STeethCen.connect(this, false, bleDevice)
             }
             R.id.btn_disconnect -> {
                 bleGatt.disconnect()
@@ -101,7 +100,7 @@ class BleDeviceDetailActivity : AppCompatActivity(), View.OnClickListener,
             }
             R.id.btn_change_mtu -> {
 
-                STeethCen.getLastConnectedGatt().requestMtu(512)
+                bleGatt.requestMtu(512)
 
             }
         }
@@ -122,7 +121,9 @@ class BleDeviceDetailActivity : AppCompatActivity(), View.OnClickListener,
         ActivityUtils.startActivity(ServicesDetailActivity::class.java)
     }
 
-    override fun onConnectSuccess() {
+
+    override fun onConnectSuccess(gatt: BluetoothGatt) {
+        bleGatt = gatt
         runOnUiThread {
             tvState.text = "已连接"
             tvState.setTextColor(Color.GREEN)

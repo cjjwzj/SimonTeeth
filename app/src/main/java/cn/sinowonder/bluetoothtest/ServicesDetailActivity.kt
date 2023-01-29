@@ -35,7 +35,7 @@ class ServicesDetailActivity : AppCompatActivity(),
         title = "服务详情"
         rvService.adapter = bleCharacteristicAdapter
         rvService.addItemDecoration(DividerItemDecoration(this, VERTICAL))
-        val currentService = STeethCen.getLastConnectedGatt().getService(selectedServiceUUID)
+        val currentService = BleDeviceDetailActivity.bleGatt.getService(selectedServiceUUID)
         currentService?.characteristics?.let { datas.addAll(it) }
         bleCharacteristicAdapter.notifyDataSetChanged()
 
