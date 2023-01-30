@@ -17,16 +17,17 @@ import cn.sinowonder.simonteeth.interfaces.peripheral.*
  * @since:V1
  * @desc:cn.sinowonder.simonteeth
  */
-object STeethPeri {
+object STeethPeri : BluetoothGattServerCallback() {
 
-    lateinit var mBleClientDevice: BluetoothDevice
-    lateinit var mBleClientGatt: BluetoothGatt
+
     lateinit var mBleGattServer: BluetoothGattServer
-    lateinit var mServerConnectListener: ServerConnectListener
-    lateinit var mServerCharacteristicListener: ServerCharacteristicListener
+    lateinit var mOnServerConnectListener: OnServerConnectListener
+    lateinit var mOnServerCharacteristicListener: OnServerCharacteristicListener
     lateinit var mOnServerNotificationSentListener: OnServerNotificationSentListener
     lateinit var mOnServerMtuChangedListener: OnServerMtuChangedListener
     lateinit var mOnExecuteWriteListener: OnExecuteWriteListener
+    lateinit var mOnPhyListener: OnPhyListener
+    lateinit var mOnDescriptorListener: OnDescriptorListener
 
     @SuppressLint("MissingPermission")
     fun startPeripheral(
@@ -55,20 +56,18 @@ object STeethPeri {
 
     @SuppressLint("MissingPermission")
     fun initServer(context: Context) {
-
         mBleGattServer =
-            SimonCore.mBluetoothManager.openGattServer(context, mBluetoothGattServerCallback)
+            SimonCore.mBluetoothManager.openGattServer(context, this)
 
     }
 
 
-
-    fun setServerConnectListener(serverConnectListener: ServerConnectListener) {
-        this.mServerConnectListener = serverConnectListener
+    fun setServerConnectListener(onServerConnectListener: OnServerConnectListener) {
+        this.mOnServerConnectListener = onServerConnectListener
     }
 
-    fun setServerCharacteristicListener(serverCharacteristicListener: ServerCharacteristicListener) {
-        this.mServerCharacteristicListener = serverCharacteristicListener
+    fun setServerCharacteristicListener(onServerCharacteristicListener: OnServerCharacteristicListener) {
+        this.mOnServerCharacteristicListener = onServerCharacteristicListener
     }
 
     fun setOnServerNotificationSentListener(onServerNotificationSentListener: OnServerNotificationSentListener) {
@@ -79,67 +78,72 @@ object STeethPeri {
         this.mOnServerMtuChangedListener = onServerMtuChangedListener
     }
 
+    fun setOnPhyListener(onPhyListener: OnPhyListener) {
+        this.mOnPhyListener = onPhyListener
+    }
+
+    fun setOnDescriptorListener(onDescriptorListener: OnDescriptorListener) {
+        this.mOnDescriptorListener = onDescriptorListener
+    }
+
     fun setOnExecuteWriteListener(onExecuteWriteListener: OnExecuteWriteListener) {
         this.mOnExecuteWriteListener = onExecuteWriteListener
     }
 
 
-    val mBluetoothGattServerCallback = object : BluetoothGattServerCallback() {
-        override fun onConnectionStateChange(device: BluetoothDevice?, status: Int, newState: Int) {
-            super.onConnectionStateChange(device, status, newState)
-            when (newState) {
-                BluetoothProfile.STATE_DISCONNECTED -> {
-                    if (STeethPeri::mServerConnectListener.isInitialized) {
-                        mServerConnectListener.onDisconnect(device, status, newState)
+    override fun onConnectionStateChange(device: BluetoothDevice?, status: Int, newState: Int) {
+        when (newState) {
+            BluetoothProfile.STATE_DISCONNECTED -> {
+                if (STeethPeri::mOnServerConnectListener.isInitialized) {
+                    this.mOnServerConnectListener.onDisconnect(device, status, newState)
 
-                    }
                 }
-                BluetoothProfile.STATE_CONNECTED -> {
-                    if (STeethPeri::mServerConnectListener.isInitialized) {
-                        mServerConnectListener.onConnectSuccess(device, status, newState)
+            }
+            BluetoothProfile.STATE_CONNECTED -> {
+                if (STeethPeri::mOnServerConnectListener.isInitialized) {
+                    this.mOnServerConnectListener.onConnectSuccess(device, status, newState)
 
-                    }
                 }
-
             }
+
         }
+    }
 
-        override fun onServiceAdded(status: Int, service: BluetoothGattService?) {
-            super.onServiceAdded(status, service)
-            if (STeethPeri::mServerConnectListener.isInitialized) {
-
-                mServerConnectListener.onServicesAdded(status, service)
-            }
+    override fun onServiceAdded(status: Int, service: BluetoothGattService?) {
+        if (STeethPeri::mOnServerConnectListener.isInitialized) {
+            this.mOnServerConnectListener.onServicesAdded(status, service)
         }
+    }
 
-        override fun onCharacteristicReadRequest(
-            device: BluetoothDevice?,
-            requestId: Int,
-            offset: Int,
-            characteristic: BluetoothGattCharacteristic?
-        ) {
-            super.onCharacteristicReadRequest(device, requestId, offset, characteristic)
-            if (STeethPeri::mServerCharacteristicListener.isInitialized) {
-                mServerCharacteristicListener.onCharacteristicReadRequest(
-                    device,
-                    requestId,
-                    offset,
-                    characteristic
-                )
+    override fun onCharacteristicReadRequest(
+        device: BluetoothDevice?,
+        requestId: Int,
+        offset: Int,
+        characteristic: BluetoothGattCharacteristic?
+    ) {
+        if (STeethPeri::mOnServerCharacteristicListener.isInitialized) {
+            this.mOnServerCharacteristicListener.onCharacteristicReadRequest(
+                device,
+                requestId,
+                offset,
+                characteristic
+            )
 
-            }
         }
+    }
 
-        override fun onCharacteristicWriteRequest(
-            device: BluetoothDevice?,
-            requestId: Int,
-            characteristic: BluetoothGattCharacteristic?,
-            preparedWrite: Boolean,
-            responseNeeded: Boolean,
-            offset: Int,
-            value: ByteArray?
-        ) {
-            super.onCharacteristicWriteRequest(
+    override fun onCharacteristicWriteRequest(
+        device: BluetoothDevice?,
+        requestId: Int,
+        characteristic: BluetoothGattCharacteristic?,
+        preparedWrite: Boolean,
+        responseNeeded: Boolean,
+        offset: Int,
+        value: ByteArray?
+    ) {
+
+        if (STeethPeri::mOnServerCharacteristicListener.isInitialized) {
+            this.mOnServerCharacteristicListener.onCharacteristicWriteRequest(
                 device,
                 requestId,
                 characteristic,
@@ -149,40 +153,39 @@ object STeethPeri {
                 value
             )
 
-            if (STeethPeri::mServerCharacteristicListener.isInitialized) {
-                mServerCharacteristicListener.onCharacteristicWriteRequest(
-                    device,
-                    requestId,
-                    characteristic,
-                    preparedWrite,
-                    responseNeeded,
-                    offset,
-                    value
-                )
-
-            }
-
         }
 
-        override fun onDescriptorReadRequest(
-            device: BluetoothDevice?,
-            requestId: Int,
-            offset: Int,
-            descriptor: BluetoothGattDescriptor?
-        ) {
-            super.onDescriptorReadRequest(device, requestId, offset, descriptor)
+    }
+
+    override fun onDescriptorReadRequest(
+        device: BluetoothDevice?,
+        requestId: Int,
+        offset: Int,
+        descriptor: BluetoothGattDescriptor?
+    ) {
+        if (STeethPeri::mOnDescriptorListener.isInitialized) {
+            this.mOnDescriptorListener.onDescriptorReadRequest(
+                device,
+                requestId,
+                offset,
+                descriptor
+            )
         }
 
-        override fun onDescriptorWriteRequest(
-            device: BluetoothDevice?,
-            requestId: Int,
-            descriptor: BluetoothGattDescriptor?,
-            preparedWrite: Boolean,
-            responseNeeded: Boolean,
-            offset: Int,
-            value: ByteArray?
-        ) {
-            super.onDescriptorWriteRequest(
+    }
+
+    override fun onDescriptorWriteRequest(
+        device: BluetoothDevice?,
+        requestId: Int,
+        descriptor: BluetoothGattDescriptor?,
+        preparedWrite: Boolean,
+        responseNeeded: Boolean,
+        offset: Int,
+        value: ByteArray?
+    ) {
+
+        if (STeethPeri::mOnDescriptorListener.isInitialized) {
+            this.mOnDescriptorListener.onDescriptorWriteRequest(
                 device,
                 requestId,
                 descriptor,
@@ -192,36 +195,39 @@ object STeethPeri {
                 value
             )
         }
+    }
 
-        override fun onExecuteWrite(device: BluetoothDevice?, requestId: Int, execute: Boolean) {
-            super.onExecuteWrite(device, requestId, execute)
-            if (STeethPeri::mOnExecuteWriteListener.isInitialized) {
-                mOnExecuteWriteListener.onExecuteWrite(device, requestId, execute)
-            }
+    override fun onExecuteWrite(device: BluetoothDevice?, requestId: Int, execute: Boolean) {
+        if (STeethPeri::mOnExecuteWriteListener.isInitialized) {
+            this.mOnExecuteWriteListener.onExecuteWrite(device, requestId, execute)
+        }
+    }
+
+    override fun onNotificationSent(device: BluetoothDevice?, status: Int) {
+        if (STeethPeri::mOnServerNotificationSentListener.isInitialized) {
+            this.mOnServerNotificationSentListener.onNotificationSent(device, status)
+        }
+    }
+
+    override fun onMtuChanged(device: BluetoothDevice?, mtu: Int) {
+        if (STeethPeri::mOnServerMtuChangedListener.isInitialized) {
+            this.mOnServerMtuChangedListener.onMtuChanged(device, mtu)
+        }
+    }
+
+    override fun onPhyUpdate(device: BluetoothDevice?, txPhy: Int, rxPhy: Int, status: Int) {
+        if (STeethPeri::mOnPhyListener.isInitialized) {
+            this.mOnPhyListener.onPhyUpdate(device, txPhy, rxPhy, status)
+        }
+    }
+
+    override fun onPhyRead(device: BluetoothDevice?, txPhy: Int, rxPhy: Int, status: Int) {
+        if (STeethPeri::mOnPhyListener.isInitialized) {
+            this.mOnPhyListener.onPhyRead(device, txPhy, rxPhy, status)
+
+
         }
 
-        override fun onNotificationSent(device: BluetoothDevice?, status: Int) {
-            super.onNotificationSent(device, status)
-            if (STeethPeri::mOnServerNotificationSentListener.isInitialized) {
-                mOnServerNotificationSentListener.onNotificationSent(device, status)
-            }
-        }
-
-        override fun onMtuChanged(device: BluetoothDevice?, mtu: Int) {
-            super.onMtuChanged(device, mtu)
-
-            if (STeethPeri::mOnServerMtuChangedListener.isInitialized) {
-                mOnServerMtuChangedListener.onMtuChanged(device, mtu)
-            }
-        }
-
-        override fun onPhyUpdate(device: BluetoothDevice?, txPhy: Int, rxPhy: Int, status: Int) {
-            super.onPhyUpdate(device, txPhy, rxPhy, status)
-        }
-
-        override fun onPhyRead(device: BluetoothDevice?, txPhy: Int, rxPhy: Int, status: Int) {
-            super.onPhyRead(device, txPhy, rxPhy, status)
-        }
     }
 
 

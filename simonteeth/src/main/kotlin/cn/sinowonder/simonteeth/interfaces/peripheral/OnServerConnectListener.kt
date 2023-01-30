@@ -13,7 +13,7 @@ import android.bluetooth.BluetoothGattService
  * @since:V1
  * @desc:cn.sinowonder.simonteeth.interface
  */
-interface ServerConnectListener {
+interface OnServerConnectListener {
 
     fun onConnectSuccess(device: BluetoothDevice?, status: Int, newState: Int)
     fun onDisconnect(device: BluetoothDevice?, status: Int, newState: Int)

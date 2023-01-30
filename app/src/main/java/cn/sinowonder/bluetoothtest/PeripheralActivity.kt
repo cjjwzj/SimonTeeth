@@ -14,14 +14,14 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import cn.sinowonder.simonteeth.STeethPeri
-import cn.sinowonder.simonteeth.interfaces.peripheral.ServerCharacteristicListener
-import cn.sinowonder.simonteeth.interfaces.peripheral.ServerConnectListener
+import cn.sinowonder.simonteeth.interfaces.peripheral.OnServerCharacteristicListener
+import cn.sinowonder.simonteeth.interfaces.peripheral.OnServerConnectListener
 import cn.sinowonder.simonteeth.readUUID
 import cn.sinowonder.simonteeth.serviceUUID
 import cn.sinowonder.simonteeth.writeUUID
 
-class PeripheralActivity : AppCompatActivity(), ServerCharacteristicListener,
-    ServerConnectListener {
+class PeripheralActivity : AppCompatActivity(), OnServerCharacteristicListener,
+    OnServerConnectListener {
 
     val btnOpenDetection: Button by lazy { findViewById(R.id.btn_open_detection) }
     val tvDetectState: TextView by lazy { findViewById(R.id.tv_detect_state) }

@@ -12,8 +12,6 @@ import java.util.*
  * @desc:cn.sinowonder.simonteeth
  */
 
-//蓝牙扫描时间
-var bleScanTime:Long = 5000
 //自定义gattService的UUID
 val serviceUUID = UUID.fromString("e5a4016e-11ca-404a-8905-1b907f8a15ab")
 //自定义write的UUID

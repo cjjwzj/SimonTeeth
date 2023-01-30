@@ -13,7 +13,7 @@ import android.bluetooth.BluetoothGattCharacteristic
  * @since:V1
  * @desc:cn.sinowonder.simonteeth.interface
  */
-interface ServerCharacteristicListener {
+interface OnServerCharacteristicListener {
 
     fun onCharacteristicReadRequest(
         device: BluetoothDevice?,
