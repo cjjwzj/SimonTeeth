@@ -1,4 +1,5 @@
 # SimonTeeth
+[![](https://www.jitpack.io/v/cjjwzj/SimonTeeth.svg)](https://www.jitpack.io/#cjjwzj/SimonTeeth)
 Android BLE蓝牙连接库(双端)
 用法:
       初始化:  val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
