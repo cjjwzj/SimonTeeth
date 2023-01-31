@@ -1,6 +1,8 @@
 # SimonTeeth
 
 [![](https://www.jitpack.io/v/cjjwzj/SimonTeeth.svg)](https://www.jitpack.io/#cjjwzj/SimonTeeth)
+![](https://img.shields.io/badge/API-18%2B-brightgreen)
+![](https://img.shields.io/badge/License-Apache--2.0-brightgreen)
 
 ## Android BLE蓝牙连接库(双端)
 
@@ -9,7 +11,6 @@
   ```gradle
   allprojects {
 		repositories {
-			...
 			maven { url 'https://www.jitpack.io' }
 		}
 	}
@@ -39,7 +40,16 @@
   STeethPeri.startPeripheral()
   ```
 
-  
+### 权限要求
+  ```xml
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+  ```
   
 ### 额外信息可参考WIKI
 
